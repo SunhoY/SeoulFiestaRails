@@ -28,8 +28,6 @@ development:
   database: seoul_fiesta_development
   username: seoul_fiesta
   password: harry.io
-  sslmode: 'require'
-  sslrootcert: 'ssl-cert-snakeoil.pem'
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
