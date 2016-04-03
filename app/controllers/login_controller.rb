@@ -1,5 +1,5 @@
-class SessionsController < ApplicationController
-  skip_before_filter  :verify_authenticity_token
+class LoginController < ApplicationController
+  skip_before_filter :verify_authenticity_token
   respond_to :json
   def create
     @user = User.find_by(email: params[:email], password: params[:password])

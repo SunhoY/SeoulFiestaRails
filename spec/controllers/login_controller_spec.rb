@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SessionsController, :type => :request do
+RSpec.describe LoginController, :type => :request do
   describe 'logging in' do
     let(:authentication) { {:email => 'harry@harry.io', :password => 'secure password'} }
     let(:invalid_authentication) { {:userName => 'harry@harry.io', :password => 'invalid password'} }
