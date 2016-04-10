@@ -13,3 +13,5 @@
 /tmp
 ssl-cert-snakeoil.pem
 .idea/
+pushToEc2.sh
+runOnRemote.sh

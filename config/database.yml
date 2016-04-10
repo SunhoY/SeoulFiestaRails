@@ -23,12 +23,14 @@ default: &default
 
 development:
   <<: *default
-  host: 52.79.44.172
-  port: 5432
   database: seoul_fiesta_development
   username: seoul_fiesta
-  password: harry.io
 
+remote_database:
+  <<: *default
+  host: 52.79.44.172
+  database: seoul_fiesta_development
+  username: seoul_fiesta
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
   # When left blank, postgres will use the default role. This is
@@ -62,6 +64,7 @@ development:
 test:
   <<: *default
   database: seoul_fiesta_test
+  username: seoul_fiesta
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
