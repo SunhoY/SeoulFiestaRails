@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   # root 'welcome#index'
 
   post '/login' => 'login#create'
+
+  resources :users
+
   # delete 'logout' => 'login#logout'
 
   # Example of regular route:
