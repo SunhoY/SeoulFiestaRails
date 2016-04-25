@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   post '/login' => 'login#create'
 
   resources :users
+  resources :vacations
 
   # delete 'logout' => 'login#logout'
 
