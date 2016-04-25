@@ -28,7 +28,7 @@ development:
 
 remote_database:
   <<: *default
-  host: 52.79.44.172
+  host: 52.79.77.203
   database: seoul_fiesta_development
   username: seoul_fiesta
   # The specified database role being used to connect to postgres.
