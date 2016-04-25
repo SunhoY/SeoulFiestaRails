@@ -1,4 +1,5 @@
 class VacationsController < ApplicationController
+  skip_before_filter :verify_authenticity_token
   respond_to :json
   def create
     Vacation.create! :user_id => params[:userId], :vacation_type => params[:type], :start_date => params[:startDate],
