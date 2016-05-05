@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160425131634) do
+ActiveRecord::Schema.define(version: 20160505095110) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,12 +25,16 @@ ActiveRecord::Schema.define(version: 20160425131634) do
     t.integer "vacations_per_year"
   end
 
+  create_table "vacation_items", force: :cascade do |t|
+    t.integer "vacation_id"
+    t.date    "vacation_date"
+  end
+
   create_table "vacations", force: :cascade do |t|
     t.integer "user_id"
     t.string  "vacation_type"
-    t.date    "start_date"
-    t.date    "end_date"
     t.string  "reason"
+    t.string  "vacation_status"
   end
 
 end
