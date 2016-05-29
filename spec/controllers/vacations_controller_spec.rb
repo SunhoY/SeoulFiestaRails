@@ -12,7 +12,6 @@ RSpec.describe VacationsController, :type => :request do
                  :vacations_per_year => 17)
   }
 
-  let!(:headers) { { :content_type => 'application/json' }}
   let!(:vacation_harry_1) {
     vacation = Vacation.create!(:user_id => harry.id, :vacation_status => 'requested',
                                 :vacation_type => 'normal', :reason => '몸이 아픔')
@@ -21,7 +20,6 @@ RSpec.describe VacationsController, :type => :request do
 
     vacation
   }
-
   let!(:vacation_harry_2) {
     vacation = Vacation.create!(:user_id => harry.id, :vacation_status => 'rejected',
                                 :vacation_type => 'family', :reason => '그냥 쉼')
@@ -31,47 +29,60 @@ RSpec.describe VacationsController, :type => :request do
     vacation
   }
 
+  let!(:session_harry) { Session.create(:user => harry)}
+  let!(:request_headers) { { 'HTTP_ACCEPT' => 'application/json', 'HTTP_AUTHORIZATION' => auth_string } }
+  let!(:auth_string) { ActionController::HttpAuthentication::Token.encode_credentials(session_harry.token) }
+
   describe 'creating vacation' do
     let!(:vacation_json) {
       {
-        :userId => harry.id, :type => 'normal',
-        :startDate => '2016-06-19', :endDate => '2016-06-21',
-        :reason => '몸이 아파서\n3일 쉽니다.'
+          :type => 'normal',
+          :startDate => '2016-06-19', :endDate => '2016-06-21',
+          :reason => '몸이 아파서\n3일 쉽니다.'
       }
     }
 
-    it 'creates vacation' do
-      post '/vacations', vacation_json, headers
-
-      expect(response).to be_success
-
-      created = Vacation.where(:user_id => harry.id).last
-
-      expect(created.user_id).to eq(harry.id)
-      expect(created.vacation_type).to eq('normal')
-      expect(created.vacation_status).to eq('requested')
-      expect(created.reason).to eq('몸이 아파서\n3일 쉽니다.')
+    context 'user provides invalid credentials' do
+      let!(:auth_string) { ActionController::HttpAuthentication::Token.encode_credentials('wrong token') }
+      it 'respond with unautorized' do
+        post '/vacations', vacation_json, request_headers
+      end
     end
 
-    it 'creates vacation items' do
-      post '/vacations', vacation_json, headers
+    context 'user provides valid credentials' do
+      it 'creates vacation' do
+        post '/vacations', vacation_json, request_headers
 
-      expect(response).to be_success
+        expect(response).to be_success
 
-      created = Vacation.where(:user_id => harry.id).last
-      vacation_items = created.vacation_items
+        created = Vacation.where(:user_id => harry.id).last
 
-      expect(vacation_items.size).to eq(3)
-      expect(vacation_items.first.vacation_date.strftime('%Y-%m-%d')).to eq('2016-06-19')
-      expect(vacation_items.second.vacation_date.strftime('%Y-%m-%d')).to eq('2016-06-20')
-      expect(vacation_items.third.vacation_date.strftime('%Y-%m-%d')).to eq('2016-06-21')
+        expect(created.user_id).to eq(harry.id)
+        expect(created.vacation_type).to eq('normal')
+        expect(created.vacation_status).to eq('requested')
+        expect(created.reason).to eq('몸이 아파서\n3일 쉽니다.')
+      end
+
+      it 'creates vacation items' do
+        post '/vacations', vacation_json, request_headers
+
+        expect(response).to be_success
+
+        created = Vacation.where(:user_id => harry.id).last
+        vacation_items = created.vacation_items
+
+        expect(vacation_items.size).to eq(3)
+        expect(vacation_items.first.vacation_date.strftime('%Y-%m-%d')).to eq('2016-06-19')
+        expect(vacation_items.second.vacation_date.strftime('%Y-%m-%d')).to eq('2016-06-20')
+        expect(vacation_items.third.vacation_date.strftime('%Y-%m-%d')).to eq('2016-06-21')
+      end
     end
   end
 
   describe 'getting vacation' do
     context 'when user did not provide id' do
       it 'respond with all the vacation items belongs to user' do
-        get "/vacations?userId=#{harry.id}"
+        get '/vacations', nil, request_headers
 
         body = response.body
         json = JSON.parse body

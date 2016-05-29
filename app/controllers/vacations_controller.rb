@@ -1,8 +1,8 @@
 class VacationsController < ApplicationController
-  skip_before_filter :verify_authenticity_token
+  before_filter :authenticate_with_session_token
   respond_to :json
   def create
-    vacation = Vacation.create! :user_id => params[:userId], :vacation_type => params[:type],
+    vacation = Vacation.create! :user_id => @user.id, :vacation_type => params[:type],
                                 :reason => params[:reason], :vacation_status => 'requested'
 
     start_date = Date.parse params[:startDate]
@@ -17,9 +17,7 @@ class VacationsController < ApplicationController
   end
 
   def index
-    user_id = params[:userId]
-
-    vacations = Vacation.where(:user_id => user_id)
+    vacations = Vacation.where(:user_id => @user.id)
 
     render :json => vacations.to_json(:include => :vacation_items, :except => :user_id)
   end

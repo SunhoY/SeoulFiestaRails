@@ -34,12 +34,13 @@ gem 'responders', '~> 2.0'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-group :development, :test do
+group :development, :test, :remote_database do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 
   gem 'rspec-rails', '~> 3.0'
   gem 'rspec-json_expectations'
+  gem 'bcrypt', '~> 3.1.7'
 end
 
 group :development do

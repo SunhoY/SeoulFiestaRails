@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_filter :authenticate_with_session_token
   respond_to :json
   def show
     user = User.find(params[:id])

@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+  has_secure_password
+  has_one :session
+
   def as_json options
     camelize_keys(super(options.merge({
         :except => [:password],
